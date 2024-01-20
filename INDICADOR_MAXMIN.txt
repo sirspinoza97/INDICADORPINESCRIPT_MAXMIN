@@ -1,0 +1,35 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © ifespinosap
+//@version=5
+strategy("INDICADOR MAX_MIN", overlay = true, max_labels_count=500)
+//Longitud de velas historicas
+leftBars  = input(30, title = "Left Bars ")
+rightBars  = input(30, title = "Right Bars")
+//Variables usadas para determinar las condiciones de los puntos de pivote
+var confmax = 0
+var confmin = 0
+var minimum = array.new_float(0)
+var maximum = array.new_float(0)
+var len_min = 0
+var len_max = 0
+//Cálculo de máximo y minimo 
+highpivot = ta.pivothigh(leftBars, rightBars)
+lowpivot = ta.pivotlow(leftBars, rightBars)
+//Máximo
+if not na(highpivot)
+    confmin := 0
+    confmax := 1
+    array.push(maximum,high[rightBars])
+    len_max := array.size(maximum)
+    l = label.new(bar_index[rightBars], highpivot,str.tostring(highpivot, format.mintick))
+    label.set_color(l, color.green)
+    label.set_style(l, label.style_label_down)
+//Minimo
+if not na(lowpivot)
+    confmax := 0
+    confmin := 1
+    array.push(minimum,low[rightBars])
+    len_min := array.size(minimum)
+    p = label.new(bar_index[rightBars], lowpivot,str.tostring(lowpivot, format.mintick))
+    label.set_color(p, color.red)
+    label.set_style(p, label.style_label_up)
